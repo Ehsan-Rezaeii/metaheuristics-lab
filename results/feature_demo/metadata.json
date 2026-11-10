@@ -1,0 +1,77 @@
+{
+  "created_utc": "2026-11-10T09:47:48.768493+00:00",
+  "config": {
+    "label": "demo",
+    "population": 12,
+    "budget": 90,
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "algorithms": {
+      "BinaryGA": {
+        "population_size": 12,
+        "crossover_rate": 0.9,
+        "mutation_rate": null,
+        "mutation_scale": 0.1,
+        "tournament_size": 3
+      },
+      "BinaryGWO-S": {
+        "population_size": 12,
+        "transfer": "s"
+      },
+      "BinaryGWO-V": {
+        "population_size": 12,
+        "transfer": "v"
+      },
+      "RandomSearch": {
+        "population_size": 12,
+        "domain": "binary"
+      }
+    },
+    "dataset": "sklearn.datasets.make_classification, fixed synthetic binary data",
+    "generator": {
+      "n_samples": 400,
+      "n_features": 16,
+      "n_informative": 6,
+      "n_redundant": 4,
+      "n_classes": 2,
+      "class_sep": 1.0,
+      "flip_y": 0.01,
+      "random_state": 2026
+    },
+    "dataset_sha256": "4c1e9fd5eb4c6cfb712bd5c0dced1fb4a1e919e26e27d3ddc608159e63004e01",
+    "split": {
+      "test_size": 0.25,
+      "stratified": true,
+      "random_state": 2026
+    },
+    "cv": {
+      "n_splits": 3,
+      "shuffle": true,
+      "random_state": 2027
+    },
+    "model": {
+      "scaler": "StandardScaler",
+      "classifier": "LogisticRegression",
+      "C": 1,
+      "solver": "liblinear",
+      "max_iter": 1000,
+      "random_state": 0
+    },
+    "fitness": "0.99*(1-mean_CV_accuracy)+0.01*selected_fraction; empty=1",
+    "simple_baseline": "SelectKBest(f_classif,k=8), fitted inside each fold"
+  },
+  "source_revision": "82d22835172d188731d5ce999a2e79c0d36381da",
+  "source_dirty": true,
+  "python": "3.12.14",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "versions": {
+    "metaheuristics-lab": "0.1.0",
+    "numpy": "2.5.4",
+    "matplotlib": "3.11.2",
+    "scikit-learn": "1.9.1"
+  },
+  "timing": "perf_counter wall seconds; serial; excludes plotting/data generation"
+}

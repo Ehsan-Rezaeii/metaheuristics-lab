@@ -1,0 +1,36 @@
+{
+  "audits": [
+    {
+      "directory": "results/benchmark_pilot",
+      "label": "pilot",
+      "status": "passed",
+      "search_runs": 40,
+      "objective_calls": 1240,
+      "baselines": 0
+    },
+    {
+      "directory": "results/benchmark_main",
+      "label": "main",
+      "status": "passed",
+      "search_runs": 400,
+      "objective_calls": 1200000,
+      "baselines": 0
+    },
+    {
+      "directory": "results/feature_pilot",
+      "label": "pilot",
+      "status": "passed",
+      "search_runs": 4,
+      "objective_calls": 20,
+      "baselines": 2
+    },
+    {
+      "directory": "results/feature_demo",
+      "label": "demo",
+      "status": "passed",
+      "search_runs": 12,
+      "objective_calls": 1080,
+      "baselines": 2
+    }
+  ]
+}
