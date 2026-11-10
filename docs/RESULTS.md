@@ -120,7 +120,14 @@ change afterward. Later changes add audit/tests/docs and modernize license
 metadata. The dependency pins are in requirements-lock.txt for Python 3.12.
 GitHub Actions config targets Python 3.10/3.12/3.13; local execution verifies
 3.12 only. Remote CI status is reported in the handoff and PR; configuring a
-matrix alone does not prove those other interpreters passed.
+matrix alone does not prove those other interpreters passed. After opening PR #1,
+the GitHub connector returned no workflow runs or statuses for the pushed commit;
+remote CI execution therefore remains unverified. Direct GitHub API access was
+blocked by environment network policy; the connected GitHub tool created the PR
+successfully. No workflow permissions or repository settings were changed.
+The saved-solution audit allows 1e-10 absolute roundoff on recomputed benchmark
+values, including near-zero cancellation in Rastrigin across NumPy versions;
+raw saved histories and their final values are still compared exactly.
 
 No known unresolved defect was found in the implemented scope. This does not
 establish correctness for every objective or numerical scale. Binary GWO uses
