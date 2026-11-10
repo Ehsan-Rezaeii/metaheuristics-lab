@@ -1,10 +1,10 @@
 import numpy as np
 import pytest
 
-from metaheuristics_lab import GA, GWO, BinaryGA, BinaryGWO, Problem, RandomSearch
+from metaheuristics_lab import GA, GWO, PSO, WOA, BinaryGA, BinaryGWO, Problem, RandomSearch
 from metaheuristics_lab.core import Evaluator
 
-CONTINUOUS = [GA, GWO, RandomSearch]
+CONTINUOUS = [GA, GWO, PSO, WOA, RandomSearch]
 BINARY = [BinaryGA, BinaryGWO]
 
 
@@ -83,7 +83,7 @@ def test_bad_budget_and_population(value):
     with pytest.raises(ValueError):
         GA(population_size=value)
     with pytest.raises(ValueError):
-        GA().optimize(Problem.binary(np.sum, 2), max_evaluations=value)
+        GA().optimize(Problem.continuous(np.sum, 2, 0, 1), max_evaluations=value)
 
 
 @pytest.mark.parametrize("seed", [-1, True, 1.2])

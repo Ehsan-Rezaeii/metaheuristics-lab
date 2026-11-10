@@ -5,6 +5,7 @@ from __future__ import annotations
 import numpy as np
 
 from .core import Evaluator, OptimizationResult, Problem, Vector, positive_int, real_parameter
+from .transfers import binary_update
 
 
 class PopulationOptimizer:
@@ -173,12 +174,98 @@ class GWO(PopulationOptimizer):
 
 
 class BinaryGWO(GWO):
-    """Binary GWO variant: S-shaped resampling from a centered wolf target."""
+    """Binary GWO with S resampling or V displacement-based bit flipping."""
 
     domain = "binary"
 
+    def __init__(self, population_size: int = 30, *, transfer: str = "s"):
+        super().__init__(population_size)
+        if transfer not in ("s", "v"):
+            raise ValueError("transfer must be 's' or 'v'")
+        self.transfer = transfer
+
     def _propose(self, pop, fitness, state, problem, rng, progress):
         target = _wolf_target(pop, fitness, rng, progress)
-        signal = 2 * target - 1
-        probability = 0.5 * (1 + np.tanh(signal / 2))
-        return (rng.random(pop.shape) < probability).astype(float)
+        return binary_update(pop, target, rng, self.transfer)
+
+
+class PSO(PopulationOptimizer):
+    """Global-best PSO with personal memory, velocity clamp and absorbing walls."""
+
+    def __init__(
+        self,
+        population_size: int = 30,
+        *,
+        inertia: float = 0.7298,
+        cognitive: float = 1.49618,
+        social: float = 1.49618,
+        velocity_fraction: float = 0.2,
+    ):
+        super().__init__(population_size)
+        self.inertia = real_parameter(inertia, "inertia", 0, 1)
+        self.cognitive = real_parameter(cognitive, "cognitive", 0, 4)
+        self.social = real_parameter(social, "social", 0, 4)
+        self.velocity_fraction = real_parameter(velocity_fraction, "velocity_fraction", 0, 1)
+
+    def _initialize(self, pop, fitness, problem, rng):
+        limit = self.velocity_fraction * (problem.upper - problem.lower)
+        return {
+            "personal": pop.copy(),
+            "values": fitness.copy(),
+            "limit": limit,
+            "velocity": rng.uniform(-limit, limit, size=pop.shape),
+        }
+
+    def _propose(self, pop, fitness, state, problem, rng, progress):
+        personal = state["personal"]
+        best = personal[np.argmin(state["values"])]
+        velocity = (
+            self.inertia * state["velocity"]
+            + self.cognitive * rng.random(pop.shape) * (personal - pop)
+            + self.social * rng.random(pop.shape) * (best - pop)
+        )
+        velocity = np.clip(velocity, -state["limit"], state["limit"])
+        target = pop + velocity
+        outside = (target < problem.lower) | (target > problem.upper)
+        state["velocity"] = np.where(outside, 0, velocity)
+        return np.clip(target, problem.lower, problem.upper)
+
+    def _observe(self, pop, fitness, state):
+        improved = fitness < state["values"]
+        state["personal"][improved] = pop[improved]
+        state["values"][improved] = fitness[improved]
+
+
+class WOA(PopulationOptimizer):
+    """Whale optimizer: encircling, random-peer exploration and logarithmic spiral."""
+
+    def __init__(self, population_size: int = 30, *, spiral_shape: float = 1.0):
+        super().__init__(population_size)
+        self.spiral_shape = real_parameter(spiral_shape, "spiral_shape", 0, 5)
+
+    def _initialize(self, pop, fitness, problem, rng):
+        index = np.argmin(fitness)
+        return {"best": pop[index].copy(), "value": fitness[index]}
+
+    def _propose(self, pop, fitness, state, problem, rng, progress):
+        n = len(pop)
+        a = 2 * (1 - progress)
+        coefficient_a = 2 * a * rng.random((n, 1)) - a
+        coefficient_c = 2 * rng.random((n, 1))
+        peer = pop[rng.integers(n, size=n)]
+        reference = np.where(np.abs(coefficient_a) < 1, state["best"], peer)
+        encircle = reference - coefficient_a * np.abs(coefficient_c * reference - pop)
+        spiral_coordinate = rng.uniform(-1, 1, size=(n, 1))
+        spiral = (
+            np.abs(state["best"] - pop)
+            * np.exp(self.spiral_shape * spiral_coordinate)
+            * np.cos(2 * np.pi * spiral_coordinate)
+            + state["best"]
+        )
+        target = np.where(rng.random((n, 1)) < 0.5, encircle, spiral)
+        return np.clip(target, problem.lower, problem.upper)
+
+    def _observe(self, pop, fitness, state):
+        index = np.argmin(fitness)
+        if fitness[index] < state["value"]:
+            state["best"], state["value"] = pop[index].copy(), fitness[index]
