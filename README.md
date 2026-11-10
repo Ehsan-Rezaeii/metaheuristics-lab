@@ -83,9 +83,7 @@ For a minimal installation, use `python -m pip install -e .` instead. No separat
 from metaheuristics_lab import GWO, benchmark_problem
 
 problem = benchmark_problem("sphere", dimension=5)
-result = GWO(population_size=20).optimize(
-    problem, max_evaluations=1_000, seed=42
-)
+result = GWO(population_size=20).optimize(problem, max_evaluations=1_000, seed=42)
 
 print("Best solution:", result.best_solution)
 print("Best objective:", result.best_fitness)
@@ -97,15 +95,15 @@ print("Evaluations:", result.n_evaluations)  # Exactly 1,000
 ```python
 from metaheuristics_lab import BinaryGA, BinaryGWO, Problem
 
+
 # A toy, explicitly defined mask objective; not a trained ML classifier.
 # Prefer fewer selected bits, but require feature 0.
 def mask_cost(mask):
     return float(mask.sum() + 10 * (1 - mask[0]))
 
+
 problem = Problem.binary(mask_cost, dimension=8)
-ga_result = BinaryGA(population_size=12).optimize(
-    problem, max_evaluations=90, seed=0
-)
+ga_result = BinaryGA(population_size=12).optimize(problem, max_evaluations=90, seed=0)
 gwo_result = BinaryGWO(population_size=12, transfer="v").optimize(
     problem, max_evaluations=90, seed=0
 )
