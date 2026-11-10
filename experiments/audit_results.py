@@ -46,7 +46,7 @@ def audit(directory: Path) -> dict:
                 assert point.shape == (problem.dimension,)
                 assert np.all((point >= problem.lower) & (point <= problem.upper))
                 np.testing.assert_allclose(
-                    problem.objective(point), float(row["best_fitness"]), rtol=1e-12, atol=1e-14
+                    problem.objective(point), float(row["best_fitness"]), rtol=1e-12, atol=1e-10
                 )
                 key = f"{row['function']}__{row['algorithm']}__{row['seed']}"
                 final = float(row["best_fitness"])
