@@ -1,0 +1,34 @@
+name: Python checks
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ['3.10', '3.12', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+      - run: python -m pip install -e '.[dev,experiments]'
+      - run: ruff check .
+      - run: ruff format --check .
+      - run: python -m pytest --cov=metaheuristics_lab --cov-report=term-missing
+      - run: python -m experiments.quickstart
+      - run: python -m experiments.benchmark --dimension 2 --population 4 --budget 9 --seeds 0 --label ci --output /tmp/benchmark_ci
+      - run: python -m experiments.feature_selection --population 4 --budget 5 --seeds 0 --label ci --output /tmp/feature_ci
+      - run: python -m build
+      - name: Verify installed wheel away from checkout
+        shell: bash
+        run: |
+          python -m venv /tmp/wheel-check
+          /tmp/wheel-check/bin/python -m pip install dist/*.whl
+          cd /tmp
+          /tmp/wheel-check/bin/python -c 'from metaheuristics_lab import GA, GWO, PSO, WOA, BinaryGA, BinaryGWO, RandomSearch, benchmark_problem; assert GA(4).optimize(benchmark_problem("sphere", 2), max_evaluations=9, seed=0).n_evaluations == 9'
