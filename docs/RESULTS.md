@@ -118,13 +118,16 @@ versions. The dirty flag includes untracked generated results (and later docs);
 optimizer/search implementations were committed before execution and did not
 change afterward. Later changes add audit/tests/docs and modernize license
 metadata. The dependency pins are in requirements-lock.txt for Python 3.12.
-GitHub Actions config targets Python 3.10/3.12/3.13; local execution verifies
-3.12 only. Remote CI status is reported in the handoff and PR; configuring a
-matrix alone does not prove those other interpreters passed. After opening PR #1,
-the GitHub connector returned no workflow runs or statuses for the pushed commit;
-remote CI execution therefore remains unverified. Direct GitHub API access was
-blocked by environment network policy; the connected GitHub tool created the PR
-successfully. No workflow permissions or repository settings were changed.
+GitHub Actions completed successfully on **Python 3.10, 3.12 and 3.13** for
+commit c5e03fc. Every matrix job passed lint, formatting, the test suite,
+quickstart, both experiment smokes, distribution build and isolated wheel import.
+[Verified workflow run](https://github.com/Ehsan-Rezaeii/metaheuristics-lab/actions/runs/42794817758).
+The connector initially returned no runs immediately after PR creation; the
+subsequent queued run was monitored through successful completion. Direct API
+access and the local gh token were unavailable, so the connected GitHub tools
+were used to create the PR and verify CI. No workflow permissions or repository
+settings were changed. Later documentation-only commits do not change the tested
+optimizer or experiment implementations; current checks are visible on PR #1.
 The saved-solution audit allows 1e-10 absolute roundoff on recomputed benchmark
 values, including near-zero cancellation in Rastrigin across NumPy versions;
 raw saved histories and their final values are still compared exactly.
