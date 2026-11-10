@@ -1,0 +1,69 @@
+{
+  "created_utc": "2026-11-10T09:47:05.833994+00:00",
+  "config": {
+    "label": "pilot",
+    "dimension": 3,
+    "population": 6,
+    "budget": 31,
+    "seeds": [
+      0,
+      1
+    ],
+    "algorithms": {
+      "RandomSearch": {
+        "population_size": 6,
+        "domain": "continuous"
+      },
+      "GA": {
+        "population_size": 6,
+        "crossover_rate": 0.9,
+        "mutation_rate": null,
+        "mutation_scale": 0.1,
+        "tournament_size": 3
+      },
+      "GWO": {
+        "population_size": 6
+      },
+      "PSO": {
+        "population_size": 6,
+        "inertia": 0.7298,
+        "cognitive": 1.49618,
+        "social": 1.49618,
+        "velocity_fraction": 0.2
+      },
+      "WOA": {
+        "population_size": 6,
+        "spiral_shape": 1.0
+      }
+    },
+    "functions": {
+      "sphere": {
+        "lower": -5.12,
+        "upper": 5.12
+      },
+      "rastrigin": {
+        "lower": -5.12,
+        "upper": 5.12
+      },
+      "ackley": {
+        "lower": -32.768,
+        "upper": 32.768
+      },
+      "rosenbrock": {
+        "lower": -5.0,
+        "upper": 10.0
+      }
+    }
+  },
+  "source_revision": "82d22835172d188731d5ce999a2e79c0d36381da",
+  "source_dirty": false,
+  "python": "3.12.14",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "versions": {
+    "metaheuristics-lab": "0.1.0",
+    "numpy": "2.5.4",
+    "matplotlib": "3.11.2",
+    "scikit-learn": "1.9.1"
+  },
+  "timing": "perf_counter wall seconds; serial; excludes plotting/data generation"
+}

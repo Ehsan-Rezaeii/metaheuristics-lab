@@ -1,0 +1,70 @@
+{
+  "selections": [
+    {
+      "method": "BinaryGA",
+      "seed": 0,
+      "fitness": 0.22405000000000008,
+      "cv_accuracy": 0.7799999999999999,
+      "selected_features": 10,
+      "evaluations": 5,
+      "cv_model_fits": 15,
+      "search_seconds": 0.06496937500003241,
+      "mask": "[1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1]"
+    },
+    {
+      "method": "BinaryGWO-S",
+      "seed": 0,
+      "fitness": 0.22405000000000008,
+      "cv_accuracy": 0.7799999999999999,
+      "selected_features": 10,
+      "evaluations": 5,
+      "cv_model_fits": 15,
+      "search_seconds": 0.06366578200004369,
+      "mask": "[1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1]"
+    },
+    {
+      "method": "BinaryGWO-V",
+      "seed": 0,
+      "fitness": 0.22405000000000008,
+      "cv_accuracy": 0.7799999999999999,
+      "selected_features": 10,
+      "evaluations": 5,
+      "cv_model_fits": 15,
+      "search_seconds": 0.06045431099994403,
+      "mask": "[1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1]"
+    },
+    {
+      "method": "RandomSearch",
+      "seed": 0,
+      "fitness": 0.2168249999999999,
+      "cv_accuracy": 0.7866666666666667,
+      "selected_features": 9,
+      "evaluations": 5,
+      "cv_model_fits": 15,
+      "search_seconds": 0.05553342400003203,
+      "mask": "[1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0]"
+    },
+    {
+      "method": "AllFeatures",
+      "seed": "",
+      "fitness": 0.22780000000000009,
+      "cv_accuracy": 0.7799999999999999,
+      "selected_features": 16,
+      "evaluations": 1,
+      "cv_model_fits": 3,
+      "search_seconds": 0.01451121700006297,
+      "mask": "[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]"
+    },
+    {
+      "method": "SelectKBest",
+      "seed": "",
+      "fitness": 0.2195,
+      "cv_accuracy": 0.7833333333333333,
+      "selected_features": 8,
+      "evaluations": 1,
+      "cv_model_fits": 3,
+      "search_seconds": 0.017944909999982883,
+      "mask": "[0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1]"
+    }
+  ]
+}

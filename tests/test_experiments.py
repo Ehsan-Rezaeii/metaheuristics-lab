@@ -1,10 +1,12 @@
 import csv
 import json
+from pathlib import Path
 
 import numpy as np
 import pytest
 
 from experiments import benchmark, feature_selection
+from experiments.audit_results import audit
 from experiments.common import sample_std
 
 
@@ -97,3 +99,11 @@ def test_feature_demo_and_heldout_label_independence(tmp_path, monkeypatch):
     assert len(split["train"]) == 300
     assert len(split["test"]) == 100
     assert not set(split["train"]) & set(split["test"])
+
+
+@pytest.mark.parametrize(
+    "batch", ["benchmark_pilot", "benchmark_main", "feature_pilot", "feature_demo"]
+)
+def test_saved_measured_batches_pass_audit(batch):
+    directory = Path(__file__).resolve().parents[1] / "results" / batch
+    assert audit(directory)["status"] == "passed"

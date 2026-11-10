@@ -143,7 +143,7 @@ def test_global_random_state_untouched():
     expected = np.random.random(4)
     np.random.seed(12)
     GA().optimize(
-        Problem.binary(np.sum, 3) if False else Problem.continuous(np.sum, 3, -1, 1),
+        Problem.continuous(np.sum, 3, -1, 1),
         max_evaluations=80,
         seed=0,
     )

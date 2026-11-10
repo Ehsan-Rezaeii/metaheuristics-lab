@@ -100,3 +100,51 @@ def test_woa_retains_best_observed_point():
 def test_extension_parameters(constructor, kwargs):
     with pytest.raises(ValueError):
         constructor(**kwargs)
+
+
+def test_pso_equation_and_absorbing_wall():
+    class HalfRandom:
+        def random(self, shape):
+            return np.full(shape, 0.5)
+
+    p = Problem.continuous(np.sum, 1, -10, 10)
+    pop = np.array([[1.0], [3.0]])
+    pso = PSO(2, inertia=0.5, cognitive=1, social=1)
+    state = {
+        "personal": np.array([[2.0], [4.0]]),
+        "values": np.array([0.0, 1.0]),
+        "velocity": np.ones((2, 1)),
+        "limit": np.array([10.0]),
+    }
+    target = pso._propose(pop, None, state, p, HalfRandom(), 0)
+    np.testing.assert_allclose(target, [[2.5], [3.5]])
+    state["velocity"][:] = 100
+    pso._propose(np.full((2, 1), 10.0), None, state, p, HalfRandom(), 0)
+    np.testing.assert_array_equal(state["velocity"], 0)
+
+
+def test_woa_encircling_peer_and_spiral_equations():
+    class FixedRandom:
+        def __init__(self):
+            self.draws = iter(
+                [
+                    np.array([[0.5], [0.9], [0.5]]),
+                    np.full((3, 1), 0.5),
+                    np.array([[0.0], [0.0], [1.0]]),
+                ]
+            )
+
+        def random(self, shape):
+            return next(self.draws)
+
+        def integers(self, n, size):
+            return np.array([1, 0, 1])
+
+        def uniform(self, low, high, size):
+            return np.zeros(size)
+
+    pop = np.array([[2.0], [4.0], [6.0]])
+    p = Problem.continuous(np.sum, 1, -10, 10)
+    target = WOA(3)._propose(pop, None, {"best": pop[0]}, p, FixedRandom(), 0)
+    # A=0 encircles best; A=1.6 explores peer 2; l=0 spirals to 2+|2-6|.
+    np.testing.assert_allclose(target, [[2.0], [-1.2], [6.0]])
