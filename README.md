@@ -169,3 +169,4 @@ The optimization algorithms are implemented in this repository rather than impor
 - [scikit-learn synthetic classification generator](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.make_classification.html) — source of the feature-selection demo data.
 
 **License:** [MIT](LICENSE). Dataset sources, experimental results and associated papers retain their own provenance and attribution.
+
